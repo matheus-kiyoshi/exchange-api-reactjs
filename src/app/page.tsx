@@ -1,113 +1,131 @@
-import Image from 'next/image'
+'use client'
+import { useState } from 'react'
+import CoinsList from './components/CoinsList/CoinsList'
+
+type dataType = {
+  bid: number
+  ask: number
+  code: string
+  high: number
+  low: number
+  name: string
+  pctChange: number
+}
 
 export default function Home() {
+  const [firstCoin, setFirstCoin] = useState('')
+  const [secondCoin, setSecondCoin] = useState('')
+  const [firstValue, setFirstValue] = useState('')
+  const [conversion, setConversion] = useState(0)
+  const [wasConverted, setWasConverted] = useState(false)
+  const [result, setResult] = useState<dataType>({
+    bid: 0,
+    ask: 0,
+    code: '',
+    high: 0,
+    low: 0,
+    name: '',
+    pctChange: 0,
+  })
+  const url = 'https://economia.awesomeapi.com.br/json/'
+
+  const coins = [
+    { name: 'Dólar Comercial', code: 'USD', id: 1 },
+    { name: 'Euro', code: 'EUR', id: 2 },
+    { name: 'Real Brasileiro', code: 'BRL', id: 3 },
+    { name: 'Iene Japonês', code: 'JPY', id: 4 },
+    { name: 'Franco Suíço', code: 'CHF', id: 5 },
+    { name: 'Libra Esterlina', code: 'GBP', id: 6 },
+    { name: 'Yuan Chinês', code: 'CNY', id: 7 },
+    { name: 'Rand Sul-Africano', code: 'ZAR', id: 8 },
+    { name: 'Dólar Australiano', code: 'AUD', id: 9 },
+    { name: 'Dólar Canadense', code: 'CAD', id: 10 },
+    { name: 'Peso Argentino', code: 'UYU', id: 11 },
+    { name: 'Peso Chileno', code: 'CLP', id: 12 },
+  ]
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    await fetch(`${url}${firstCoin}-${secondCoin}`)
+      .then((response) => response.json())
+      .then((response) => {
+        setConversion(Number(response[0].bid))
+        setResult(response)
+        setWasConverted(true)
+        // const data: dataType = {
+        //   bid: response[0].bid,
+        //   ask: response[0].ask,
+        //   code: response[0].code,
+        //   high: response[0].high,
+        //   low: response[0].low,
+        //   name: response[0].name,
+        //   pctChange: response[0].pctChange,
+      })
+    // .catch((error) => {
+    //   return console.error(error)
+    // })
+    // setConversion(Number(data.bid))
+    // setResult(data)
+    // setWasConverted(true)
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div className="bg-white text-black w-screen h-screen">
+      <form onSubmit={handleSubmit} className="flex flex-col">
+        <h1>Conversor de Moedas</h1>
+        <div>
+          <label htmlFor="input">Quantia:</label>
+          <input
+            type="number"
+            id="input"
+            placeholder="Insira algum valor"
+            onChange={(e) => setFirstValue(e.target.value)}
+          />
+          <CoinsList
+            text="select"
+            to="De"
+            onChange={(e) => {
+              setWasConverted(false)
+              setFirstCoin(e.target.value)
+            }}
+            disabled={false}
+          />
         </div>
+        <div>
+          <label htmlFor="input2">Conversão:</label>
+          <input
+            type="text"
+            id="input2"
+            readOnly
+            placeholder="Converta alguma moeda..."
+            value={
+              firstValue !== '' && wasConverted
+                ? (conversion * Number(firstValue)).toFixed(2).replace('.', ',')
+                : ''
+            }
+          />
+          <CoinsList
+            text="select2"
+            to="Para"
+            onChange={(e) => {
+              setWasConverted(false)
+              setSecondCoin(e.target.value)
+            }}
+            disabled={false}
+          />
+        </div>
+        <button type="submit">Converter</button>
+      </form>
+      <div>
+        {wasConverted ? (
+          <p>
+            1 {firstCoin} é igual a <br />
+            {Number(result.bid).toFixed(2).replace('.', ',')} {secondCoin}
+          </p>
+        ) : (
+          <p>Converta alguma moeda...</p>
+        )}
       </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </div>
   )
 }
