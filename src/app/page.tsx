@@ -2,6 +2,9 @@
 import { useState } from 'react'
 import CoinsList from './components/CoinsList/CoinsList'
 import Modal from './components/Modal/Modal'
+import './globals.css'
+import Loading from './components/Loading/Loading'
+import Result from './components/Result/Result'
 
 type dataType = {
   bid: number
@@ -19,6 +22,7 @@ export default function Home() {
   const [firstValue, setFirstValue] = useState('')
   const [conversion, setConversion] = useState(0)
   const [wasConverted, setWasConverted] = useState(false)
+  const [converting, setConverting] = useState(false)
   const [modal, setModal] = useState(false)
   const [result, setResult] = useState<dataType>({
     bid: 0,
@@ -31,23 +35,9 @@ export default function Home() {
   })
   const url = 'https://economia.awesomeapi.com.br/json/'
 
-  const coins = [
-    { name: 'Dólar Comercial', code: 'USD', id: 1 },
-    { name: 'Euro', code: 'EUR', id: 2 },
-    { name: 'Real Brasileiro', code: 'BRL', id: 3 },
-    { name: 'Iene Japonês', code: 'JPY', id: 4 },
-    { name: 'Franco Suíço', code: 'CHF', id: 5 },
-    { name: 'Libra Esterlina', code: 'GBP', id: 6 },
-    { name: 'Yuan Chinês', code: 'CNY', id: 7 },
-    { name: 'Rand Sul-Africano', code: 'ZAR', id: 8 },
-    { name: 'Dólar Australiano', code: 'AUD', id: 9 },
-    { name: 'Dólar Canadense', code: 'CAD', id: 10 },
-    { name: 'Peso Argentino', code: 'UYU', id: 11 },
-    { name: 'Peso Chileno', code: 'CLP', id: 12 },
-  ]
-
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    setConverting(true)
     const request = await fetch(`${url}${firstCoin}-${secondCoin}`)
     const response = await request.json()
     const data: dataType = {
@@ -59,6 +49,7 @@ export default function Home() {
       name: response[0]?.name,
       pctChange: response[0]?.pctChange,
     }
+    setConverting(false)
     if (!isNaN(Number(data.bid))) {
       setConversion(Number(data.bid))
       setResult(data)
@@ -73,8 +64,27 @@ export default function Home() {
     setModal(false)
   }
 
+  function resultGenerate() {
+    if (converting) {
+      return <Loading />
+    } else {
+      return wasConverted ? (
+        <Result
+          bid={result.bid}
+          firstCoin={firstCoin}
+          secondCoin={secondCoin}
+        />
+      ) : (
+        <p className="text-black font-semibold">
+          Converta alguma moeda
+          <span className="text-gray-800 italic">...</span>
+        </p>
+      )
+    }
+  }
+
   return (
-    <div className="bg-white text-black w-screen h-screen">
+    <>
       {modal && (
         <Modal
           title="ERRO"
@@ -84,63 +94,69 @@ export default function Home() {
           handleClick={handleClickModal}
         />
       )}
-      <form onSubmit={handleSubmit} className="flex flex-col">
-        <h1>Conversor de Moedas</h1>
-        <div>
-          <label htmlFor="input">Quantia:</label>
-          <input
-            type="number"
-            id="input"
-            placeholder="Insira algum valor"
-            onChange={(e) => setFirstValue(e.target.value)}
-          />
-          <CoinsList
-            text="select"
-            to="De"
-            onChange={(e) => {
-              setWasConverted(false)
-              setFirstCoin(e.target.value)
-            }}
-            disabled={false}
-            momentCoin={secondCoin}
-          />
-        </div>
-        <div>
-          <label htmlFor="input2">Conversão:</label>
-          <input
-            type="text"
-            id="input2"
-            readOnly
-            placeholder="Converta alguma moeda..."
-            value={
-              firstValue !== '' && wasConverted
-                ? (conversion * Number(firstValue)).toFixed(2).replace('.', ',')
-                : ''
-            }
-          />
-          <CoinsList
-            text="select2"
-            to="Para"
-            onChange={(e) => {
-              setWasConverted(false)
-              setSecondCoin(e.target.value)
-            }}
-            disabled={false}
-            momentCoin={firstCoin}
-          />
-        </div>
-        <button type="submit">Converter</button>
-      </form>
-      <div>
-        {wasConverted ? (
-          <p>
-            1 {firstCoin} é igual a <br />
-            {Number(result.bid).toFixed(2).replace('.', ',')} {secondCoin}
-          </p>
-        ) : (
-          <p>Converta alguma moeda...</p>
-        )}
+      <div className="bg text-black w-screen h-screen flex justify-center items-center">
+        <main className="flex flex-col items-center rounded-3xl gap-10 p-12 bg bs">
+          <h1 className="text-3xl font-extrabold underline">
+            Conversor de Moedas
+          </h1>
+          <form onSubmit={handleSubmit} className="flex flex-col">
+            <div className="flex flex-col-reverse gap-3 w-64 h-28">
+              <input
+                type="number"
+                id="input"
+                className="w-full h-14 text-black rounded-md pl-4 border border-gray-300"
+                placeholder="Insira algum valor"
+                onChange={(e) => setFirstValue(e.target.value)}
+              />
+              <CoinsList
+                text="select"
+                to="De"
+                onChange={(e) => {
+                  setWasConverted(false)
+                  setFirstCoin(e.target.value)
+                }}
+                disabled={false}
+                momentCoin={secondCoin}
+              />
+            </div>
+            <div className="flex flex-col-reverse gap-3 w-64 h-28 mt-2">
+              <input
+                type="text"
+                id="input2"
+                className="w-full h-14 text-black rounded-md pl-4 border border-gray-300"
+                readOnly
+                placeholder="Converta alguma moeda..."
+                value={
+                  firstValue !== '' && wasConverted
+                    ? (conversion * Number(firstValue))
+                        .toFixed(2)
+                        .replace('.', ',')
+                    : ''
+                }
+              />
+              <CoinsList
+                text="select2"
+                to="Para"
+                onChange={(e) => {
+                  setWasConverted(false)
+                  setSecondCoin(e.target.value)
+                }}
+                disabled={false}
+                momentCoin={firstCoin}
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full h-9 rounded-md bg-blue-500 text-white font-bold mt-3 hover:text-blue-500 hover:border hover:border-blue-500 hover:bg-white transition-all ease-in-out duration-300"
+            >
+              Converter
+            </button>
+          </form>
+          <div className="border border-gray-400 rounded-2xl p-4">
+            {resultGenerate()}
+          </div>
+        </main>
       </div>
-    </div>
+    </>
   )
 }
