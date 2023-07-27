@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import CoinsList from './components/CoinsList/CoinsList'
+import Modal from './components/Modal/Modal'
 
 type dataType = {
   bid: number
@@ -18,6 +19,7 @@ export default function Home() {
   const [firstValue, setFirstValue] = useState('')
   const [conversion, setConversion] = useState(0)
   const [wasConverted, setWasConverted] = useState(false)
+  const [modal, setModal] = useState(false)
   const [result, setResult] = useState<dataType>({
     bid: 0,
     ask: 0,
@@ -46,31 +48,42 @@ export default function Home() {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    await fetch(`${url}${firstCoin}-${secondCoin}`)
-      .then((response) => response.json())
-      .then((response) => {
-        setConversion(Number(response[0].bid))
-        setResult(response)
-        setWasConverted(true)
-        // const data: dataType = {
-        //   bid: response[0].bid,
-        //   ask: response[0].ask,
-        //   code: response[0].code,
-        //   high: response[0].high,
-        //   low: response[0].low,
-        //   name: response[0].name,
-        //   pctChange: response[0].pctChange,
-      })
-    // .catch((error) => {
-    //   return console.error(error)
-    // })
-    // setConversion(Number(data.bid))
-    // setResult(data)
-    // setWasConverted(true)
+    const request = await fetch(`${url}${firstCoin}-${secondCoin}`)
+    const response = await request.json()
+    const data: dataType = {
+      bid: response[0]?.bid,
+      ask: response[0]?.ask,
+      code: response[0]?.code,
+      high: response[0]?.high,
+      low: response[0]?.low,
+      name: response[0]?.name,
+      pctChange: response[0]?.pctChange,
+    }
+    if (!isNaN(Number(data.bid))) {
+      setConversion(Number(data.bid))
+      setResult(data)
+      setWasConverted(true)
+    } else {
+      setWasConverted(false)
+      setModal(true)
+    }
+  }
+
+  function handleClickModal() {
+    setModal(false)
   }
 
   return (
     <div className="bg-white text-black w-screen h-screen">
+      {modal && (
+        <Modal
+          title="ERRO"
+          message="Ocorreu um erro na solicitação da API, a conversão desejada não existe ou não está disponível no momento."
+          hasCloseButton={true}
+          hasOkButton={true}
+          handleClick={handleClickModal}
+        />
+      )}
       <form onSubmit={handleSubmit} className="flex flex-col">
         <h1>Conversor de Moedas</h1>
         <div>
@@ -89,6 +102,7 @@ export default function Home() {
               setFirstCoin(e.target.value)
             }}
             disabled={false}
+            momentCoin={secondCoin}
           />
         </div>
         <div>
@@ -112,6 +126,7 @@ export default function Home() {
               setSecondCoin(e.target.value)
             }}
             disabled={false}
+            momentCoin={firstCoin}
           />
         </div>
         <button type="submit">Converter</button>

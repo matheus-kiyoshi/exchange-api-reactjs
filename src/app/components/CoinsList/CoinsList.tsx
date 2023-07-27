@@ -3,12 +3,14 @@ type CoinsListProps = {
   to: string
   onChange: React.ChangeEventHandler<HTMLSelectElement>
   disabled: boolean
+  momentCoin: string | null
 }
 export default function CoinsList({
   text,
   to,
   onChange,
   disabled = false,
+  momentCoin,
 }: CoinsListProps) {
   const coins = [
     { name: 'Dólar Comercial', code: 'USD', id: 1 },
@@ -25,6 +27,26 @@ export default function CoinsList({
     { name: 'Peso Chileno', code: 'CLP', id: 12 },
   ]
 
+  function optionsGenerate() {
+    return coins.map((coin) => {
+      if (coin.code === momentCoin) {
+        disabled = true
+        return (
+          <option key={coin.id} value={coin.code} disabled={disabled}>
+            {coin.name}
+          </option>
+        )
+      } else {
+        disabled = false
+        return (
+          <option key={coin.id} value={coin.code} disabled={disabled}>
+            {coin.name}
+          </option>
+        )
+      }
+    })
+  }
+
   return (
     <div>
       <label htmlFor={text}>{to}: </label>
@@ -32,11 +54,7 @@ export default function CoinsList({
         <option value="" disabled selected>
           Selecione
         </option>
-        {coins.map((coin) => (
-          <option key={coin.id} value={coin.code} disabled={disabled}>
-            {coin.name}
-          </option>
-        ))}
+        {optionsGenerate()}
       </select>
     </div>
   )
