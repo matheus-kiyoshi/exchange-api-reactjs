@@ -1,11 +1,13 @@
 'use client'
 import { useState } from 'react'
-import CoinsList from './components/CoinsList/CoinsList'
+import CoinsList from './components/Form/CoinsList/CoinsList'
 import Modal from './components/Modal/Modal'
 import './globals.css'
 import Loading from './components/Loading/Loading'
 import Result from './components/Result/Result'
 import ThemeSwitcher from './components/ThemeSwitcher/ThemeSwitcher'
+import Input from './components/Form/Input/Input'
+import Button from './components/Form/Button/Button'
 
 type dataType = {
   bid: number
@@ -105,10 +107,9 @@ export default function Home() {
           </h1>
           <form onSubmit={handleSubmit} className="flex flex-col">
             <div className="flex flex-col-reverse gap-3 w-64 h-28">
-              <input
+              <Input
                 type="number"
                 id="input"
-                className="w-full h-14 text-black dark:text-zinc-200 rounded-md pl-4 border border-gray-300 transition-all"
                 placeholder="Insira algum valor"
                 onChange={(e) => setFirstValue(e.target.value)}
               />
@@ -124,18 +125,17 @@ export default function Home() {
               />
             </div>
             <div className="flex flex-col-reverse gap-3 w-64 h-28 mt-2">
-              <input
+              <Input
                 type="text"
                 id="input2"
-                className="w-full h-14 text-black dark:text-zinc-200 rounded-md pl-4 border border-gray-300 transition-all"
-                readOnly
                 placeholder="Converta alguma moeda..."
+                readOnly
                 value={
                   firstValue !== '' && wasConverted
-                    ? (conversion * Number(firstValue))
+                    ? `${secondCoin} ${(conversion * Number(firstValue))
                         .toFixed(2)
-                        .replace('.', ',')
-                    : ''
+                        .replace('.', ',')}`
+                    : `${secondCoin}`
                 }
               />
               <CoinsList
@@ -149,12 +149,10 @@ export default function Home() {
                 momentCoin={firstCoin}
               />
             </div>
-            <button
-              type="submit"
-              className="w-full h-9 rounded-md bg-blue-500 text-white font-bold mt-3 hover:text-blue-500 hover:border hover:border-blue-500 hover:bg-white dark:hover:bg-zinc-800 transition-all ease-in-out duration-300"
-            >
-              Converter
-            </button>
+            <Button
+              style="w-full h-9 rounded-md bg-blue-500 text-white font-bold mt-3 hover:text-blue-500 hover:border hover:border-blue-500 hover:bg-white dark:hover:bg-zinc-800 transition-all ease-in-out duration-300"
+              text="Converter"
+            />
           </form>
           <div className="border border-gray-400 dark:border-gray-600 rounded-2xl p-4 transition-all">
             {resultGenerate()}
