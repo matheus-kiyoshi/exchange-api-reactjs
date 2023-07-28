@@ -2,12 +2,12 @@
 
 ## Resumo 
 
- - Aplicação para câmbio de moedas e valores consumindo a AwesomeAPI.
+- Aplicação para câmbio de moedas e valores consumindo a AwesomeAPI.
 
 ## API
 
- - AwesomeAPI
- - Link: https://docs.awesomeapi.com.br/api-de-moedas
+- AwesomeAPI
+  - Link: https://docs.awesomeapi.com.br/api-de-moedas
 
 ## Tecnologias 
 
@@ -24,7 +24,7 @@
 
 ## Link do Site
 
- - Vercel
+- Vercel
   - [Exchange API](https://exchange-api-reactjs.vercel.app)
 
 ## Screenshots
