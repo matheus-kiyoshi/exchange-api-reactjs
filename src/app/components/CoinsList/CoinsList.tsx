@@ -51,17 +51,18 @@ export default function CoinsList({
     <div className="flex items-center justify-between">
       <label
         htmlFor={text}
-        className="w-1/5 text-black mr-3 ml-1 font-semibold"
+        className="w-1/5 text-black dark:text-zinc-200 mr-3 ml-1 font-semibold transition-all"
       >
         {to}:
       </label>
       <select
         name={text}
         onChange={onChange}
+        defaultValue={''}
         required
-        className="w-4/5 h-10 text-black rounded-sm pl-2 border border-gray-400 bg-slate-50"
+        className="w-4/5 h-10 text-black dark:text-zinc-200 rounded-sm pl-2 border border-gray-400 transition-all"
       >
-        <option value="" disabled selected>
+        <option value="" disabled>
           Selecione
         </option>
         {optionsGenerate()}

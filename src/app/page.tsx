@@ -5,6 +5,7 @@ import Modal from './components/Modal/Modal'
 import './globals.css'
 import Loading from './components/Loading/Loading'
 import Result from './components/Result/Result'
+import ThemeSwitcher from './components/ThemeSwitcher/ThemeSwitcher'
 
 type dataType = {
   bid: number
@@ -75,16 +76,18 @@ export default function Home() {
           secondCoin={secondCoin}
         />
       ) : (
-        <p className="text-black font-semibold">
+        <p className="text-black dark:text-zinc-200 font-semibold transition-all">
           Converta alguma moeda
-          <span className="text-gray-800 italic">...</span>
+          <span className="text-gray-800 dark:text-zinc-400 italic transition-all">
+            ...
+          </span>
         </p>
       )
     }
   }
 
   return (
-    <>
+    <div>
       {modal && (
         <Modal
           title="ERRO"
@@ -94,9 +97,10 @@ export default function Home() {
           handleClick={handleClickModal}
         />
       )}
-      <div className="bg text-black w-screen h-screen flex justify-center items-center">
-        <main className="flex flex-col items-center rounded-3xl gap-10 p-12 bg bs">
-          <h1 className="text-3xl font-extrabold underline">
+      <div className="bg text-black w-screen h-screen flex justify-center items-center transition-all">
+        <main className="flex flex-col items-center rounded-3xl gap-10 p-12 bg bs transition-all">
+          <ThemeSwitcher />
+          <h1 className="text-3xl font-extrabold underline dark:text-purple-700 transition-all">
             Conversor de Moedas
           </h1>
           <form onSubmit={handleSubmit} className="flex flex-col">
@@ -104,7 +108,7 @@ export default function Home() {
               <input
                 type="number"
                 id="input"
-                className="w-full h-14 text-black rounded-md pl-4 border border-gray-300"
+                className="w-full h-14 text-black dark:text-zinc-200 rounded-md pl-4 border border-gray-300 transition-all"
                 placeholder="Insira algum valor"
                 onChange={(e) => setFirstValue(e.target.value)}
               />
@@ -123,7 +127,7 @@ export default function Home() {
               <input
                 type="text"
                 id="input2"
-                className="w-full h-14 text-black rounded-md pl-4 border border-gray-300"
+                className="w-full h-14 text-black dark:text-zinc-200 rounded-md pl-4 border border-gray-300 transition-all"
                 readOnly
                 placeholder="Converta alguma moeda..."
                 value={
@@ -147,16 +151,16 @@ export default function Home() {
             </div>
             <button
               type="submit"
-              className="w-full h-9 rounded-md bg-blue-500 text-white font-bold mt-3 hover:text-blue-500 hover:border hover:border-blue-500 hover:bg-white transition-all ease-in-out duration-300"
+              className="w-full h-9 rounded-md bg-blue-500 text-white font-bold mt-3 hover:text-blue-500 hover:border hover:border-blue-500 hover:bg-white dark:hover:bg-zinc-800 transition-all ease-in-out duration-300"
             >
               Converter
             </button>
           </form>
-          <div className="border border-gray-400 rounded-2xl p-4">
+          <div className="border border-gray-400 dark:border-gray-600 rounded-2xl p-4 transition-all">
             {resultGenerate()}
           </div>
         </main>
       </div>
-    </>
+    </div>
   )
 }

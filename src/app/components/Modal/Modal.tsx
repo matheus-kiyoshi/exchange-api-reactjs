@@ -19,10 +19,10 @@ export default function Modal({
 }: ModalProps) {
   return (
     <div>
-      <div className="absolute w-screen h-screen bg-black bg-opacity-30"></div>
+      <div className="absolute w-screen h-screen bg-black bg-opacity-30 dark:bg-opacity-50 transition-all"></div>
       <div className="absolute w-screen h-screen flex items-center justify-center">
-        <div className="absolute w-96 h-72 bg-white rounded-xl flex flex-col justify-between items-center">
-          <div className="flex justify-between items-center bg-red-500 text-white w-96 h-12 rounded-t-xl">
+        <div className="absolute w-96 h-72 bg-white dark:bg-zinc-800 rounded-xl flex flex-col justify-between items-center transition-all">
+          <div className="flex justify-between items-center bg-red-500 dark:bg-red-700 text-white dark:text-zinc-200 w-96 h-12 rounded-t-xl transition-all">
             <p className="ml-4">{title}</p>
             {hasCloseButton && (
               <button className="mr-6" onClick={handleClick}>
@@ -36,14 +36,14 @@ export default function Modal({
               !hasOkButton && 'mb-24',
             )}
           >
-            <BiSolidErrorCircle className="h-24 w-1/3 text-red-500" />
-            <p className="text-sm w-2/3 h-24 mr-4 text-justify flex items-center">
+            <BiSolidErrorCircle className="h-24 w-1/3 text-red-500 dark:text-red-700 transition-all" />
+            <p className="text-sm w-2/3 h-24 mr-4 text-justify flex items-center text-black dark:text-zinc-200 transition-all">
               {message}
             </p>
           </div>
           {hasOkButton && (
             <button
-              className="bg-green-500 text-white w-28 h-12 rounded-2xl mb-5"
+              className="bg-green-500 dark:bg-green-700 text-white dark:text-zinc-200 w-28 h-12 rounded-2xl mb-5"
               onClick={handleClick}
             >
               OK

@@ -2,11 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
-.bg {
-  background: #f0f0f0;
+html.light {
+  .bg {
+    background: #f0f0f0;
+  }
+  
+  .bs {
+    box-shadow: 21px 21px 42px #afafaf,
+    -21px -21px 42px #ffffff;
+  }
 }
 
-.bs {
-  box-shadow: 21px 21px 42px #afafaf,
-  -21px -21px 42px #ffffff;
+html.dark {
+  .bg {
+    background: #1e2125;
+  }
+  
+  .bs {
+    box-shadow: 22px 22px 44px #15171a,
+             -22px -22px 44px #272b30;
+  }
 }
