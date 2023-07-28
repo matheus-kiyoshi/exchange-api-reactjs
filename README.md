@@ -29,5 +29,10 @@
 
 ## Screenshots
 
-            Light Mode                                 Dark Mode
-![ScreenShot](./public/screenshot1.png) ![ScreenShot](./public/screenshot2.png)
+# Light Mode
+                                   Light Mode        
+   ![ScreenShot](./public/screenshot1.png)
+
+# Dark Mode
+                                   Dark Mode
+   ![ScreenShot](./public/screenshot2.png)
