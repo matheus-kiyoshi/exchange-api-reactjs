@@ -7,19 +7,19 @@
 ## API
 
  - AwesomeAPI
- - Link:
-  - https://docs.awesomeapi.com.br/api-de-moedas
+ - Link: https://docs.awesomeapi.com.br/api-de-moedas
 
 ## Tecnologias 
 
- - React
+- React
   - React Hooks
- - TypeScript
-  - Requisição Fetch
- - TailwindCSS
+- TypeScript
+  - Fetch
+  - Types
+- TailwindCSS
   - TwMerge
   - tailwind/nesting
- - Next.js
+- Next.js
   - next-themes
 
 ## Link do Site
