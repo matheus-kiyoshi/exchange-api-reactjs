@@ -18,11 +18,16 @@
   - Requisição Fetch
  - TailwindCSS
   - TwMerge
+  - tailwind/nesting
  - Next.js
+  - next-themes
 
 ## Link do Site
 
  - Vercel
-  - 
+  - [Exchange API](https://exchange-api-reactjs.vercel.app)
 
 ## Screenshots
+
+            Light Mode                                 Dark Mode
+![ScreenShot](./public/screenshot1.png) ![ScreenShot](./public/screenshot2.png)
